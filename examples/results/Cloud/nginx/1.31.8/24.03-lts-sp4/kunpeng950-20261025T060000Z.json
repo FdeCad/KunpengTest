@@ -1,0 +1,121 @@
+{
+  "schema_version": "1.0",
+  "software": "nginx",
+  "version": "1.31.8",
+  "hardware": "kunpeng950",
+  "test_time": "2026-10-25T06:00:00Z",
+  "finished_at": "2026-10-25T06:29:10Z",
+  "run_status": "completed",
+  "upstream_unsupported": false,
+  "unsupported_reasons": [],
+  "job_url": "https://ci.example.com/kunpeng/jobs/12346",
+  "test_cases": [
+    {
+      "id": "NGX-F-001",
+      "name": "install_from_repo",
+      "description": "从 openEuler 仓库安装 nginx 1.31.8，检查包完整性、文件权限与 systemd unit 是否存在。",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-25T06:01:05Z",
+      "duration_ms": 16380
+    },
+    {
+      "id": "NGX-F-002",
+      "name": "config_validate",
+      "description": "执行 nginx -t，使用默认配置与一份包含 upstream、location、gzip 的配置，期望语法检查通过。",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-25T06:01:50Z",
+      "duration_ms": 760
+    },
+    {
+      "id": "NGX-F-003",
+      "name": "start_stop_reload",
+      "description": "systemctl start/stop/reload nginx，检查进程状态、监听端口 80 与 reload 后配置生效。",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-25T06:03:10Z",
+      "duration_ms": 6120
+    },
+    {
+      "id": "NGX-F-004",
+      "name": "static_file_serving",
+      "description": "请求 1KB、1MB、10MB 静态文件，校验 HTTP 200、Content-Length 与文件 checksum 一致。",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-25T06:05:40Z",
+      "duration_ms": 11890
+    },
+    {
+      "id": "NGX-F-005",
+      "name": "reverse_proxy",
+      "description": "配置 nginx 反向代理到本地 HTTP 后端，校验请求头转发、504 超时与 upstream keepalive 行为。",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-25T06:09:30Z",
+      "duration_ms": 20140
+    },
+    {
+      "id": "NGX-P-001",
+      "name": "http_static_throughput",
+      "description": "wrk 压测 1KB 静态文件，100 并发连接，持续 60s，记录吞吐与延迟分位数。",
+      "category": "performance",
+      "result": "pass",
+      "test_time": "2026-10-25T06:18:00Z",
+      "duration_ms": 60000,
+      "metrics": {
+        "throughput_req_s": 61120.2,
+        "latency_p50_ms": 1.41,
+        "latency_p95_ms": 3.62,
+        "latency_p99_ms": 7.08,
+        "cpu_util_pct": 70.2,
+        "mem_rss_mb": 37.9
+      },
+      "thresholds": {
+        "throughput_req_s": {"min": 30000},
+        "latency_p99_ms": {"max": 50}
+      }
+    },
+    {
+      "id": "NGX-P-002",
+      "name": "https_static_throughput",
+      "description": "HTTPS 1KB 静态文件，100 并发连接，持续 60s，使用 TLS 1.3 与会话复用。",
+      "category": "performance",
+      "result": "pass",
+      "test_time": "2026-10-25T06:22:00Z",
+      "duration_ms": 60000,
+      "metrics": {
+        "throughput_req_s": 27845.7,
+        "latency_p50_ms": 3.21,
+        "latency_p95_ms": 7.84,
+        "latency_p99_ms": 14.36,
+        "cpu_util_pct": 82.5,
+        "mem_rss_mb": 40.8
+      },
+      "thresholds": {
+        "throughput_req_s": {"min": 15000},
+        "latency_p99_ms": {"max": 60}
+      }
+    },
+    {
+      "id": "NGX-P-003",
+      "name": "keepalive_long_connection",
+      "description": "开启 keepalive，100 并发长连接，每连接连续发送 10000 个请求，统计吞吐与错误率。",
+      "category": "performance",
+      "result": "pass",
+      "test_time": "2026-10-25T06:26:00Z",
+      "duration_ms": 60000,
+      "metrics": {
+        "throughput_req_s": 64890.6,
+        "latency_p50_ms": 1.28,
+        "latency_p99_ms": 6.02,
+        "error_rate_pct": 0.0,
+        "cpu_util_pct": 73.4
+      },
+      "thresholds": {
+        "throughput_req_s": {"min": 40000},
+        "error_rate_pct": {"max": 0.1}
+      }
+    }
+  ]
+}

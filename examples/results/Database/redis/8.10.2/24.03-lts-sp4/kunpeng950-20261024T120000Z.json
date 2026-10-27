@@ -1,0 +1,115 @@
+{
+  "schema_version": "1.0",
+  "software": "redis",
+  "version": "8.10.2",
+  "hardware": "kunpeng950",
+  "test_time": "2026-10-24T12:00:00Z",
+  "finished_at": "2026-10-24T12:42:10Z",
+  "run_status": "completed",
+  "upstream_unsupported": false,
+  "unsupported_reasons": [],
+  "job_url": "https://ci.example.com/kunpeng/jobs/12360",
+  "test_cases": [
+    {
+      "id": "REDIS-F-001",
+      "name": "install_from_repo",
+      "description": "从 openEuler 仓库安装 redis 8.10.2，检查 redis-server、redis-cli 与 systemd unit。",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-24T12:01:20Z",
+      "duration_ms": 15230
+    },
+    {
+      "id": "REDIS-F-002",
+      "name": "start_stop",
+      "description": "启动/停止 redis-server，校验 6379 端口监听、PING 返回 PONG。",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-24T12:02:10Z",
+      "duration_ms": 5340
+    },
+    {
+      "id": "REDIS-F-003",
+      "name": "replication",
+      "description": "一主一从部署，写入 10000 个 key，校验从节点数据同步完成且 offset 一致。",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-24T12:06:00Z",
+      "duration_ms": 48210
+    },
+    {
+      "id": "REDIS-F-004",
+      "name": "cluster_failover",
+      "description": "三主三从集群，kill 一个主节点，期望 60s 内完成 failover 且所有 slot 可服务。",
+      "category": "functional",
+      "result": "fail",
+      "test_time": "2026-10-24T12:15:00Z",
+      "duration_ms": 91240,
+      "message": "failover 后 2 个 slot 在 60s 内未恢复，集群状态为 fail；疑似与本次网络抖动有关。",
+      "log_url": "https://ci.example.com/kunpeng/jobs/12360/logs/REDIS-F-004"
+    },
+    {
+      "id": "REDIS-F-005",
+      "name": "persistence_aof",
+      "description": "开启 appendonly，写入 100MB 数据后执行 BGREWRITEAOF，校验 AOF 文件完整且重启后可恢复。",
+      "category": "functional",
+      "result": "error",
+      "test_time": "2026-10-24T12:22:00Z",
+      "duration_ms": 120000,
+      "message": "AOF rewrite 期间 runner 磁盘 I/O 超时，测试框架判定为基础设施异常，未得出产品结论。",
+      "log_url": "https://ci.example.com/kunpeng/jobs/12360/logs/REDIS-F-005"
+    },
+    {
+      "id": "REDIS-F-006",
+      "name": "tls_connection",
+      "description": "启用 TLS 启动 redis-server，使用 redis-cli --tls 建立连接并执行 SET/GET。",
+      "category": "functional",
+      "result": "skip",
+      "test_time": "2026-10-24T12:26:00Z",
+      "duration_ms": 0,
+      "message": "本次环境未配置证书，按用例配置跳过；非产品失败。"
+    },
+    {
+      "id": "REDIS-P-001",
+      "name": "set_get_throughput",
+      "description": "redis-benchmark 混合 SET/GET，50 并发、100000 请求，记录 OPS 与 P99 延迟。",
+      "category": "performance",
+      "result": "fail",
+      "test_time": "2026-10-24T12:32:00Z",
+      "duration_ms": 120000,
+      "metrics": {
+        "throughput_ops_s": 81234.0,
+        "latency_p50_ms": 0.82,
+        "latency_p95_ms": 6.41,
+        "latency_p99_ms": 12.8,
+        "cpu_util_pct": 91.2
+      },
+      "thresholds": {
+        "throughput_ops_s": {"min": 100000},
+        "latency_p99_ms": {"max": 10}
+      },
+      "message": "吞吐低于阈值 100000 ops/s，P99 高于 10ms；同版本上一轮（未入库）为 104000 ops/s，需复查。",
+      "log_url": "https://ci.example.com/kunpeng/jobs/12360/logs/REDIS-P-001"
+    },
+    {
+      "id": "REDIS-P-002",
+      "name": "pipeline_throughput",
+      "description": "redis-benchmark -P 16 管道模式，50 并发、100000 请求，记录 OPS 与 P99。",
+      "category": "performance",
+      "result": "pass",
+      "test_time": "2026-10-24T12:38:00Z",
+      "duration_ms": 120000,
+      "metrics": {
+        "throughput_ops_s": 512300.0,
+        "latency_p50_ms": 0.31,
+        "latency_p95_ms": 2.12,
+        "latency_p99_ms": 4.2,
+        "cpu_util_pct": 84.6
+      },
+      "thresholds": {
+        "throughput_ops_s": {"min": 300000},
+        "latency_p99_ms": {"max": 10}
+      }
+    }
+  ]
+}

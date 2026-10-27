@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "software": "mysql",
+  "version": "9.7.0",
+  "hardware": "kunpeng920",
+  "test_time": "2026-10-23T17:00:00Z",
+  "finished_at": "2026-10-23T17:03:10Z",
+  "run_status": "aborted",
+  "upstream_unsupported": false,
+  "unsupported_reasons": [],
+  "job_url": "https://ci.example.com/kunpeng/jobs/12370",
+  "test_cases": [],
+  "extensions": {
+    "infra": {
+      "failure_stage": "image_pull",
+      "registry_status": 503,
+      "retry_count": 2
+    }
+  }
+}

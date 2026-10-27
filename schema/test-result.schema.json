@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kunpeng-test-result.schema.json",
+  "title": "Kunpeng Test Result",
+  "description": "鲲鹏（Kunpeng 920/950）上 openEuler 容器镜像的测试结果文件。一个文件代表一次测试运行（run），存放在 openeuler-docker-images 仓库的 <分类>/<应用名>/<应用版本>/<openEuler 版本>/ 目录下，命名为 <hardware>-<YYYYMMDDTHHMMSSZ>.json。文件不覆盖历史，重测请生成新文件。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "software",
+    "version",
+    "hardware",
+    "test_time",
+    "upstream_unsupported",
+    "unsupported_reasons",
+    "test_cases"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0",
+      "description": "数据契约版本。新增可选字段升 minor，破坏性变更升 major。"
+    },
+    "software": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._+-]{0,63}$",
+      "description": "应用名，小写，例如 nginx、redis、pytorch；需与所在目录名一致。"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._+~-]{0,63}$",
+      "description": "应用版本号/标签，保留原始写法，例如 1.31.8、9.7.0、2.4.0+cpu；需与所在目录名一致。"
+    },
+    "hardware": {
+      "type": "string",
+      "enum": ["kunpeng920", "kunpeng950"],
+      "description": "硬件平台枚举，需与文件名前缀一致。"
+    },
+    "test_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "本次测试运行开始时间，UTC，ISO 8601。文件名使用该时间的紧凑格式 <YYYYMMDDTHHMMSSZ>。"
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "本次测试运行结束时间，UTC。可选。"
+    },
+    "run_status": {
+      "type": "string",
+      "enum": ["completed", "aborted", "error"],
+      "default": "completed",
+      "description": "运行级状态。单条用例结果见 test_cases[].result。aborted/error 时允许 test_cases 为空。"
+    },
+    "upstream_unsupported": {
+      "type": "boolean",
+      "description": "上游官方是否不支持鲲鹏/aarch64（或目标 OS）。只推判定结果，不在本接口内执行规则。"
+    },
+    "unsupported_reasons": {
+      "type": "array",
+      "maxItems": 20,
+      "description": "不支持原因。upstream_unsupported=true 时至少 1 条；false 时必须为空数组。",
+      "items": {
+        "$ref": "#/$defs/unsupportedReason"
+      }
+    },
+    "test_cases": {
+      "type": "array",
+      "maxItems": 5000,
+      "description": "测试用例列表。同一文件内 name 必须唯一。",
+      "items": {
+        "$ref": "#/$defs/testCase"
+      }
+    },
+    "job_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "CI Job 地址，可选。"
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "扩展字段。新字段优先放这里，避免破坏旧消费者。"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "upstream_unsupported": {
+            "const": true
+          }
+        },
+        "required": ["upstream_unsupported"]
+      },
+      "then": {
+        "properties": {
+          "unsupported_reasons": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "upstream_unsupported": {
+            "const": false
+          }
+        },
+        "required": ["upstream_unsupported"]
+      },
+      "then": {
+        "properties": {
+          "unsupported_reasons": {
+            "maxItems": 0
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "unsupportedReason": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{2,63}$",
+          "description": "规则码，稳定不变，例如 NO_UPSTREAM_AARCH64_BINARY。"
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024,
+          "description": "面向看板的中文说明，由规则生成。"
+        },
+        "evidence": {
+          "type": "array",
+          "maxItems": 10,
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "description": "判定证据链接，例如上游 release 页、issue、文档。"
+        },
+        "checked_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "规则判定时间，UTC。"
+        }
+      }
+    },
+    "testCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "description", "category", "result", "test_time"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$",
+          "description": "用例稳定 ID，可选。建议与自动化框架中的用例 ID 一致。"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "description": "用例名，同一文件内唯一。"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "description": "用例描述：测什么、怎么测、期望是什么。"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["functional", "performance"],
+          "description": "测试分类：功能/性能。"
+        },
+        "result": {
+          "type": "string",
+          "enum": ["pass", "fail", "skip", "blocked", "error"],
+          "description": "用例结果。fail=产品/功能不符合预期；error=测试基础设施异常；skip=主动不执行；blocked=被依赖阻塞。"
+        },
+        "test_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "用例执行时间，UTC，ISO 8601。"
+        },
+        "duration_ms": {
+          "type": "number",
+          "minimum": 0,
+          "description": "用例耗时，毫秒，可选。"
+        },
+        "message": {
+          "type": "string",
+          "maxLength": 8192,
+          "description": "失败/跳过/阻塞/异常原因，或关键输出摘要。"
+        },
+        "log_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "用例日志地址，可选。"
+        },
+        "metrics": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          },
+          "description": "性能指标键值对，例如 throughput_req_s、latency_p99_ms。功能用例可省略。"
+        },
+        "thresholds": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/threshold"
+          },
+          "description": "性能阈值。result=pass/fail 应与此保持一致。"
+        }
+      }
+    },
+    "threshold": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}
