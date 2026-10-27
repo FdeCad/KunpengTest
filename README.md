@@ -11,11 +11,8 @@
 openeuler-docker-images-test/
 └── <应用分类>/                      # AI / Bigdata / Storage / Database / Cloud / HPC / Distroless / Others
     └── <应用名>/                    # 例如 mysql、redis、nginx、pytorch
-        ├── README.md
-        ├── meta.yml
         └── <应用版本>/              # 例如 9.7.0
             └── <openEuler 版本>/    # 例如 24.03-lts-sp4
-                ├── Dockerfile
                 └── <hardware>-<YYYYMMDDTHHMMSSZ>.json
 ```
 
@@ -34,23 +31,6 @@ AI/pytorch/2.14.1/24.03-lts-sp4/kunpeng920-20261022T080000Z.json
 - 一个文件 = 一次测试运行；**不覆盖历史**。重测写新文件即可。
 - 文件名 = `<hardware>-<UTC 时间>.json`；同一秒内多次运行时追加 `-<6位run_id>`。
 - 没有 `index.json`，也没有读写接口；看板或脚本直接遍历目录读取。
-
-## 仓库结构
-
-```text
-.
-├── README.md
-├── schema/
-│   └── test-result.schema.json        # 结果文件数据契约（JSON Schema 2020-12）
-├── examples/
-│   ├── results/                       # 按 openeuler-docker-images 目录存放的示例
-│   │   ├── AI/
-│   │   ├── Cloud/
-│   │   └── Database/
-│   └── unsupported-rules.md           # 上游不支持的规则码表
-└── scripts/
-    └── validate_examples.py           # 无第三方依赖的校验脚本
-```
 
 ## 字段速查
 
