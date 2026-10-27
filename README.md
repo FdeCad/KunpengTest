@@ -19,7 +19,7 @@ openeuler-docker-images-test/
 示例：
 
 ```text
-F/faiss/1.8.0/oe2403sp4/kunpeng920-20261022T130819Z.json
+F/faiss/1.8.0/oe2403sp4/kunpeng920-20261022T130819Z.json    #os写进json里面
 M/mysql/26.7.0/oe2403sp4/kunpeng950-20261023T070920Z.json
 X/x264/0480cb05/oe2403sp4/kunpeng950-20261023T080301Z.json
 O/openjdk/28_19/oe2403sp4/kunpeng920-20261022T155634Z.json
