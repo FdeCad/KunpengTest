@@ -1,0 +1,36 @@
+{
+  "schema_version": "2.0",
+  "software": "rocksdb",
+  "version": "7.9.2",
+  "hardware": "kunpeng950",
+  "test_time": "2026-10-26T08:42:13Z",
+  "finished_at": "2026-10-26T08:45:30Z",
+  "run_status": "completed",
+  "test_result": true,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/nv-action/vllm-benchmarks/actions/runs/40293292901/job/121475794555",
+  "test_cases": [
+    {
+      "name": "version",
+      "description": "rocksdb/version.h 中的版本必须等于请求版本",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-26T08:42:13Z"
+    },
+    {
+      "name": "upstream-test",
+      "description": "运行上游 db_bench 官方工具做写入 + 只读烟测",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-26T08:42:13Z"
+    },
+    {
+      "name": "api-smoke",
+      "description": "编译并运行最小 C++ 程序验证 Open/Put/Get/reopen",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-26T08:42:13Z"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": "2.0",
+  "software": "faiss",
+  "version": "1.8.0",
+  "hardware": "kunpeng950",
+  "test_time": "2026-10-22T17:07:31Z",
+  "finished_at": "2026-10-22T17:10:10Z",
+  "run_status": "completed",
+  "test_result": true,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/nv-action/vllm-benchmarks/actions/runs/39812116980/job/119941988761",
+  "test_cases": [
+    {
+      "name": "version",
+      "description": "已安装 faiss 版本必须等于请求版本",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T17:07:31Z"
+    },
+    {
+      "name": "index-flat-l2",
+      "description": "构建 IndexFlatL2,add 向量,search 返回最近邻并校验与暴力计算一致",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T17:07:31Z"
+    },
+    {
+      "name": "index-ivf-pq",
+      "description": "训练 IndexIVFPQ 量化索引,add 向量并检索,校验训练/入库状态与邻居合法性",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T17:07:31Z"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "kunpeng-test-result.schema.json",
   "title": "Kunpeng Test Result",
-  "description": "鲲鹏（Kunpeng 920/950）上 openEuler 容器镜像的测试结果文件。一个文件代表一次测试运行（run），存放在 openeuler-docker-images 仓库的 <分类>/<应用名>/<应用版本>/<openEuler 版本>/ 目录下，命名为 <hardware>-<YYYYMMDDTHHMMSSZ>.json。文件不覆盖历史，重测请生成新文件。",
+  "description": "鲲鹏（Kunpeng 920/950）上 openEuler 容器镜像的测试结果文件。一个文件代表一次测试运行（run），按应用名首字母 A-Z 分片存放：<A-Z>/<应用名>/<应用版本>/<OS 简写，如 oe2403sp4>/，文件命名为 <hardware>-<YYYYMMDDTHHMMSSZ>.json。文件不覆盖历史，重测请生成新文件。",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -11,14 +11,15 @@
     "version",
     "hardware",
     "test_time",
-    "upstream_unsupported",
+    "test_result",
+    "upstream_supported",
     "unsupported_reasons",
     "test_cases"
   ],
   "properties": {
     "schema_version": {
       "type": "string",
-      "const": "1.0",
+      "const": "2.0",
       "description": "数据契约版本。新增可选字段升 minor，破坏性变更升 major。"
     },
     "software": {
@@ -28,8 +29,8 @@
     },
     "version": {
       "type": "string",
-      "pattern": "^[A-Za-z0-9][A-Za-z0-9._+~-]{0,63}$",
-      "description": "应用版本号/标签，保留原始写法，例如 1.31.8、9.7.0、2.4.0+cpu；需与所在目录名一致。"
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._+~_-]{0,63}$",
+      "description": "应用版本号/标签，保留原始写法，例如 1.31.8、9.7.0、2.4.0+cpu、28_19；需与所在目录名一致。"
     },
     "hardware": {
       "type": "string",
@@ -50,16 +51,20 @@
       "type": "string",
       "enum": ["completed", "aborted", "error"],
       "default": "completed",
-      "description": "运行级状态。单条用例结果见 test_cases[].result。aborted/error 时允许 test_cases 为空。"
+      "description": "运行级状态。单条用例结果见 test_cases[].result。未执行到用例阶段时允许 test_cases 为空。"
     },
-    "upstream_unsupported": {
+    "test_result": {
       "type": "boolean",
-      "description": "上游官方是否不支持鲲鹏/aarch64（或目标 OS）。只推判定结果，不在本接口内执行规则。"
+      "description": "看板展示开关兼总体结论。true=该软件测试通过，可在该 OS + 硬件上正常运行，看板展示；false=不满足该结论，看板不展示。"
+    },
+    "upstream_supported": {
+      "type": "boolean",
+      "description": "上游官方是否支持鲲鹏/aarch64（或目标 OS）。只推判定结果，不在本接口内执行规则。"
     },
     "unsupported_reasons": {
       "type": "array",
       "maxItems": 20,
-      "description": "不支持原因。upstream_unsupported=true 时至少 1 条；false 时必须为空数组。",
+      "description": "不支持原因。upstream_supported=false 时至少 1 条；true 时必须为空数组。",
       "items": {
         "$ref": "#/$defs/unsupportedReason"
       }
@@ -87,11 +92,11 @@
     {
       "if": {
         "properties": {
-          "upstream_unsupported": {
-            "const": true
+          "upstream_supported": {
+            "const": false
           }
         },
-        "required": ["upstream_unsupported"]
+        "required": ["upstream_supported"]
       },
       "then": {
         "properties": {
@@ -104,11 +109,11 @@
     {
       "if": {
         "properties": {
-          "upstream_unsupported": {
-            "const": false
+          "upstream_supported": {
+            "const": true
           }
         },
-        "required": ["upstream_unsupported"]
+        "required": ["upstream_supported"]
       },
       "then": {
         "properties": {

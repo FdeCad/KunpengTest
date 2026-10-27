@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """Validate Kunpeng test-result example files without third-party dependencies.
 
-结果文件直接复用 openeuler-docker-images 的目录，与 Dockerfile 同级：
+结果文件按应用名首字母 A-Z 分片存放：
 
-    <应用分类>/<应用名>/<应用版本>/<openEuler 版本>/<hardware>-<YYYYMMDDTHHMMSSZ>.json
+    <A-Z>/<应用名>/<应用版本>/<OS 简写>/<hardware>-<YYYYMMDDTHHMMSSZ>.json
 
 检查项：
   * 每个结果文件是合法 JSON，且符合文档中的字段契约
-  * 目录中的应用名 / 应用版本与文件字段一致
+  * 首字母分片目录 / 应用名 / 应用版本与文件字段一致
   * 文件名中的 hardware / test_time 与字段一致
-  * upstream_unsupported 与 unsupported_reasons 一致
+  * test_result 为布尔值，并与运行状态、用例结果保持一致
+  * upstream_supported 与 unsupported_reasons 一致
   * schema 文件可解析
 
 退出码 0 = 全部通过，1 = 存在错误。
@@ -32,7 +33,7 @@ CATEGORY = {"functional", "performance"}
 RESULT = {"pass", "fail", "skip", "blocked", "error"}
 RUN_STATUS = {"completed", "aborted", "error"}
 SOFTWARE_RE = re.compile(r"^[a-z0-9][a-z0-9._+-]{0,63}$")
-VERSION_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._+~-]{0,63}$")
+VERSION_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._+~_-]{0,63}$")
 REASON_RE = re.compile(r"^[A-Z][A-Z0-9_]{2,63}$")
 CASE_ID_RE = re.compile(r"^[A-Za-z0-9._:-]{1,128}$")
 
@@ -82,6 +83,11 @@ def compact_time(dt: datetime) -> str:
     return dt.strftime("%Y%m%dT%H%M%SZ")
 
 
+def shard_for(software: str) -> str:
+    first = software[0].upper()
+    return first if "A" <= first <= "Z" else "0-9"
+
+
 def is_number(value) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool)
 
@@ -100,21 +106,22 @@ def check_result(path: Path, data: dict) -> None:
 
     allowed = {
         "schema_version", "software", "version", "hardware",
-        "test_time", "finished_at", "run_status",
-        "upstream_unsupported", "unsupported_reasons", "test_cases",
+        "test_time", "finished_at", "run_status", "test_result",
+        "upstream_supported", "unsupported_reasons", "test_cases",
         "job_url", "extensions",
     }
     check_keys(data, allowed, where)
 
     for key in (
         "schema_version", "software", "version", "hardware",
-        "test_time", "upstream_unsupported", "unsupported_reasons", "test_cases",
+        "test_time", "test_result",
+        "upstream_supported", "unsupported_reasons", "test_cases",
     ):
         if key not in data:
             err(f"{where}: missing required field {key}")
 
-    if data.get("schema_version") != "1.0":
-        err(f"{where}.schema_version: expected '1.0'")
+    if data.get("schema_version") != "2.0":
+        err(f"{where}.schema_version: expected '2.0'")
 
     software = data.get("software")
     if not isinstance(software, str) or not SOFTWARE_RE.match(software):
@@ -139,20 +146,30 @@ def check_result(path: Path, data: dict) -> None:
     if run_status not in RUN_STATUS:
         err(f"{where}.run_status: invalid value {run_status!r}")
 
-    # 目录与文件名：<分类>/<应用名>/<应用版本>/<openEuler 版本>/<hardware>-<时间>.json
+    test_result = data.get("test_result")
+    if "test_result" in data and not isinstance(test_result, bool):
+        err(f"{where}.test_result: must be boolean")
+
+    # 目录与文件名：<A-Z>/<应用名>/<应用版本>/<OS 简写>/<hardware>-<时间>.json
     try:
         parts = path.relative_to(RESULTS).parts
     except ValueError:
         parts = ()
-    if len(parts) < 5:
+    if len(parts) != 5:
         err(
             f"{where}: expected "
-            f"<category>/<software>/<version>/<oe-version>/<file>.json"
+            f"<A-Z>/<software>/<version>/<os-dir>/<file>.json"
         )
     else:
-        filename = parts[-1]
-        dir_version = parts[-3]
-        dir_software = parts[-4]
+        shard, dir_software, dir_version, _dir_os_version, filename = parts
+        expected_shard = (
+            shard_for(software) if isinstance(software, str) and software else ""
+        )
+        if shard != expected_shard:
+            err(
+                f"{where}: directory shard {shard!r} != expected "
+                f"{expected_shard!r} (first letter of software)"
+            )
         if dir_software != software:
             err(f"{where}: directory software {dir_software!r} != field {software!r}")
         if dir_version != version:
@@ -169,17 +186,17 @@ def check_result(path: Path, data: dict) -> None:
                     f"{expected!r} (or expected + -<6 alnum>)"
                 )
 
-    unsupported = data.get("upstream_unsupported")
-    if not isinstance(unsupported, bool):
-        err(f"{where}.upstream_unsupported: must be boolean")
+    supported = data.get("upstream_supported")
+    if not isinstance(supported, bool):
+        err(f"{where}.upstream_supported: must be boolean")
     reasons = data.get("unsupported_reasons")
     if not isinstance(reasons, list):
         err(f"{where}.unsupported_reasons: must be an array")
         reasons = []
-    if unsupported is True and not reasons:
-        err(f"{where}: upstream_unsupported=true but unsupported_reasons is empty")
-    if unsupported is False and reasons:
-        err(f"{where}: upstream_unsupported=false but unsupported_reasons is not empty")
+    if supported is False and not reasons:
+        err(f"{where}: upstream_supported=false but unsupported_reasons is empty")
+    if supported is True and reasons:
+        err(f"{where}: upstream_supported=true but unsupported_reasons is not empty")
     for i, reason in enumerate(reasons):
         rw = f"{where}.unsupported_reasons[{i}]"
         if not isinstance(reason, dict):
@@ -266,8 +283,24 @@ def check_result(path: Path, data: dict) -> None:
                     elif not value or not all(is_number(v) for v in value.values()):
                         err(f"{cw}.thresholds.{key}: min/max must be numbers")
 
-    if run_status == "completed" and not cases:
+    if run_status == "completed" and not cases and test_result is not False:
         warn(f"{where}: completed run has no test_cases")
+
+    if test_result is True:
+        if run_status != "completed":
+            warn(f"{where}: test_result=true but run_status={run_status!r}")
+        if not cases:
+            warn(f"{where}: test_result=true but test_cases is empty")
+        bad_cases = [
+            str(case.get("name"))
+            for case in cases
+            if isinstance(case, dict) and case.get("result") in {"fail", "error"}
+        ]
+        if bad_cases:
+            warn(
+                f"{where}: test_result=true but has fail/error cases: "
+                f"{', '.join(bad_cases)}"
+            )
 
 
 def validate_results() -> dict[Path, dict]:

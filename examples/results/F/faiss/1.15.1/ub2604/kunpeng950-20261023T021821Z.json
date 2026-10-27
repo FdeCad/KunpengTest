@@ -1,0 +1,14 @@
+{
+  "schema_version": "2.0",
+  "software": "faiss",
+  "version": "1.15.1",
+  "hardware": "kunpeng950",
+  "test_time": "2026-10-23T02:18:21Z",
+  "finished_at": "2026-10-23T02:37:57Z",
+  "run_status": "completed",
+  "test_result": false,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/nv-action/vllm-benchmarks/actions/runs/39885835774/job/120203362322",
+  "test_cases": []
+}

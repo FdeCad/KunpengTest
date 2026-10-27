@@ -1,0 +1,36 @@
+{
+  "schema_version": "2.0",
+  "software": "ceph",
+  "version": "21.3.0",
+  "hardware": "kunpeng920",
+  "test_time": "2026-10-26T03:42:43Z",
+  "finished_at": "2026-10-26T03:43:03Z",
+  "run_status": "completed",
+  "test_result": true,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/FdeCad/boostkit-performance-evaluation/actions/runs/40265389196/job/121386606500",
+  "test_cases": [
+    {
+      "name": "version",
+      "description": "ceph --version 必须等于请求版本",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-26T03:42:43Z"
+    },
+    {
+      "name": "upstream-test",
+      "description": "运行上游自带离线自检工具 ceph-dencoder 与 monmaptool",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-26T03:42:43Z"
+    },
+    {
+      "name": "cluster-smoke",
+      "description": "最小可用性冒烟,校验 ceph-mon/ceph-osd/ceph-mgr 二进制可执行(不引导完整集群)",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-26T03:42:43Z"
+    }
+  ]
+}

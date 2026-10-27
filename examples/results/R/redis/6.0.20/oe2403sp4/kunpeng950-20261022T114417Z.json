@@ -1,0 +1,36 @@
+{
+  "schema_version": "2.0",
+  "software": "redis",
+  "version": "6.0.20",
+  "hardware": "kunpeng950",
+  "test_time": "2026-10-22T11:44:17Z",
+  "finished_at": "2026-10-22T11:57:01Z",
+  "run_status": "completed",
+  "test_result": true,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/nv-action/vllm-benchmarks/actions/runs/39772730483/job/119804284863",
+  "test_cases": [
+    {
+      "name": "version",
+      "description": "构建产物版本必须等于请求版本",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T11:44:17Z"
+    },
+    {
+      "name": "upstream-test",
+      "description": "运行上游 Redis Tcl 测试套件 unit/type/string",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T11:44:17Z"
+    },
+    {
+      "name": "cli-roundtrip",
+      "description": "redis-server/redis-cli SET/GET 回环功能验证",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T11:44:17Z"
+    }
+  ]
+}

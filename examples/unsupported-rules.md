@@ -2,11 +2,11 @@
 
 ## 1. 语义
 
-`upstream_unsupported` 表示**上游官方是否明确不支持鲲鹏 / Linux aarch64 / 目标 OS**，含义不是“本次测试是否通过”。
+`upstream_supported` 表示**上游官方是否明确支持鲲鹏 / Linux aarch64 / 目标 OS**，含义不是“本次测试是否通过”。
 
-- 上游没有 aarch64 官方包，但发行版仓库有可用的 aarch64 构建：`upstream_unsupported=true`，测试仍可执行，结果可以是 `pass`。
-- 上游支持 aarch64，但本次用例失败：`upstream_unsupported=false`，失败归因于产品、环境或用例，不得写成“上游不支持”。
-- 上游已 EOL / 明确声明放弃该架构：`upstream_unsupported=true`。
+- 上游没有 aarch64 官方包，但发行版仓库有可用的 aarch64 构建：`upstream_supported=false`，测试仍可执行，结果可以是 `pass`。
+- 上游支持 aarch64，但本次用例失败：`upstream_supported=true`，失败归因于产品、环境或用例，不得写成“上游不支持”。
+- 上游已 EOL / 明确声明放弃该架构：`upstream_supported=false`。
 - 仅仅“我们没有在鲲鹏上验证过”不构成上游不支持。
 
 ## 2. 原因对象
@@ -34,26 +34,26 @@
 
 ## 3. 规则码
 
-| code | 判定含义 | 典型证据 | `upstream_unsupported` |
+| code | 判定含义 | 典型证据 | `upstream_supported` |
 | --- | --- | --- | --- |
-| `NO_UPSTREAM_AARCH64_BINARY` | 上游 release 只提供 x86_64 二进制/安装包，无 aarch64 产物 | 上游下载页、release assets 列表 | `true` |
-| `NO_UPSTREAM_AARCH64_WHEEL` | 上游包仓库没有 Linux aarch64 wheel/包 | PyPI、npm、Maven Central 等文件列表 | `true` |
-| `NO_UPSTREAM_AARCH64_IMAGE` | 上游容器镜像没有 linux/arm64 manifest | registry manifest、官方 Dockerfile | `true` |
-| `NO_UPSTREAM_OS_SUPPORT` | 上游明确只支持特定 OS，目标 OS 不在支持列表 | 官方支持矩阵、安装文档 | `true` |
-| `NO_UPSTREAM_CUDA_AARCH64` | 上游 GPU/CUDA 版本不提供 Linux aarch64 支持 | 官方安装矩阵 | `true` |
-| `UPSTREAM_EOL` | 上游版本已 EOL，不再提供修复或构建 | 官方 EOL 公告、生命周期页面 | `true` |
-| `UPSTREAM_DEPRECATED` | 上游已标记 deprecated，建议迁移 | 官方 deprecation notice | `true` |
-| `UPSTREAM_ARCH_DROPPED` | 上游曾支持 aarch64，后续版本明确移除 | release notes、issue、commit | `true` |
-| `LICENSE_RESTRICTED` | 许可证限制导致无法合法分发/验证 | 许可证文本、官方声明 | `true` |
-| `NO_UPSTREAM_RELEASE` | 上游不存在该版本或该版本未正式发布 | release 页面、tag 列表 | `true` |
+| `NO_UPSTREAM_AARCH64_BINARY` | 上游 release 只提供 x86_64 二进制/安装包，无 aarch64 产物 | 上游下载页、release assets 列表 | `false` |
+| `NO_UPSTREAM_AARCH64_WHEEL` | 上游包仓库没有 Linux aarch64 wheel/包 | PyPI、npm、Maven Central 等文件列表 | `false` |
+| `NO_UPSTREAM_AARCH64_IMAGE` | 上游容器镜像没有 linux/arm64 manifest | registry manifest、官方 Dockerfile | `false` |
+| `NO_UPSTREAM_OS_SUPPORT` | 上游明确只支持特定 OS，目标 OS 不在支持列表 | 官方支持矩阵、安装文档 | `false` |
+| `NO_UPSTREAM_CUDA_AARCH64` | 上游 GPU/CUDA 版本不提供 Linux aarch64 支持 | 官方安装矩阵 | `false` |
+| `UPSTREAM_EOL` | 上游版本已 EOL，不再提供修复或构建 | 官方 EOL 公告、生命周期页面 | `false` |
+| `UPSTREAM_DEPRECATED` | 上游已标记 deprecated，建议迁移 | 官方 deprecation notice | `false` |
+| `UPSTREAM_ARCH_DROPPED` | 上游曾支持 aarch64，后续版本明确移除 | release notes、issue、commit | `false` |
+| `LICENSE_RESTRICTED` | 许可证限制导致无法合法分发/验证 | 许可证文本、官方声明 | `false` |
+| `NO_UPSTREAM_RELEASE` | 上游不存在该版本或该版本未正式发布 | release 页面、tag 列表 | `false` |
 
 新增规则时：先在表里登记 `code` 和语义，再让规则引擎产出；统计时只按 `code` 聚合，不解析 `message`。
 
 ## 4. 一致性约束
 
-- `upstream_unsupported=true` → `unsupported_reasons` 至少 1 条。
-- `upstream_unsupported=false` → `unsupported_reasons` 必须为 `[]`。
-- 不允许用 `upstream_unsupported=true` 掩盖测试环境问题；环境问题应写 `run_status=error/aborted` 或用例 `result=error`。
+- `upstream_supported=false` → `unsupported_reasons` 至少 1 条。
+- `upstream_supported=true` → `unsupported_reasons` 必须为 `[]`。
+- 不允许用 `upstream_supported=false` 掩盖测试环境问题；环境问题应写 `run_status=error/aborted` 或用例 `result=error`。
 - `message` 可以随证据更新，但 `code` 不变；统计以 `code` 为准。
 
 ## 5. 建议的规则执行顺序
