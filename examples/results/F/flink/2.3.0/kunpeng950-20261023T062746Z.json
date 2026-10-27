@@ -1,0 +1,37 @@
+{
+  "schema_version": "3.0",
+  "software": "flink",
+  "version": "2.3.0",
+  "hardware": "kunpeng950",
+  "os": "oe2403sp4",
+  "test_time": "2026-10-23T06:27:46Z",
+  "finished_at": "2026-10-23T06:34:44Z",
+  "run_status": "completed",
+  "test_result": true,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/nv-action/vllm-benchmarks/actions/runs/39906178119/job/120289670836",
+  "test_cases": [
+    {
+      "name": "version",
+      "description": "bin/flink --version 必须等于请求版本",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-23T06:27:46Z"
+    },
+    {
+      "name": "upstream-example",
+      "description": "运行官方发行版自带的 WordCount 示例并断言作业成功结束",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-23T06:27:46Z"
+    },
+    {
+      "name": "cluster-smoke",
+      "description": "启动本地 standalone mini-cluster(JobManager+TaskManager)并校验 TaskManager 已注册",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-23T06:27:46Z"
+    }
+  ]
+}

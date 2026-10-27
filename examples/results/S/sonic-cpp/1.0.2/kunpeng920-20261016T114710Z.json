@@ -1,0 +1,15 @@
+{
+  "schema_version": "3.0",
+  "software": "sonic-cpp",
+  "version": "1.0.2",
+  "hardware": "kunpeng920",
+  "os": "ub2604",
+  "test_time": "2026-10-16T11:47:10Z",
+  "finished_at": "2026-10-16T11:48:11Z",
+  "run_status": "aborted",
+  "test_result": false,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/FdeCad/boostkit-performance-evaluation/actions/runs/38887050842/job/116927295878",
+  "test_cases": []
+}

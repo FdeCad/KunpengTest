@@ -3,12 +3,13 @@
 
 结果文件按应用名首字母 A-Z 分片存放：
 
-    <A-Z>/<应用名>/<应用版本>/<OS 简写>/<hardware>-<YYYYMMDDTHHMMSSZ>.json
+    <A-Z>/<应用名>/<应用版本>/<hardware>-<YYYYMMDDTHHMMSSZ>.json
 
 检查项：
   * 每个结果文件是合法 JSON，且符合文档中的字段契约
   * 首字母分片目录 / 应用名 / 应用版本与文件字段一致
   * 文件名中的 hardware / test_time 与字段一致
+  * os 为合法简写
   * test_result 为布尔值，并与运行状态、用例结果保持一致
   * upstream_supported 与 unsupported_reasons 一致
   * schema 文件可解析
@@ -34,6 +35,7 @@ RESULT = {"pass", "fail", "skip", "blocked", "error"}
 RUN_STATUS = {"completed", "aborted", "error"}
 SOFTWARE_RE = re.compile(r"^[a-z0-9][a-z0-9._+-]{0,63}$")
 VERSION_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._+~_-]{0,63}$")
+OS_RE = re.compile(r"^[a-z0-9][a-z0-9._-]{1,31}$")
 REASON_RE = re.compile(r"^[A-Z][A-Z0-9_]{2,63}$")
 CASE_ID_RE = re.compile(r"^[A-Za-z0-9._:-]{1,128}$")
 
@@ -105,7 +107,7 @@ def check_result(path: Path, data: dict) -> None:
         return
 
     allowed = {
-        "schema_version", "software", "version", "hardware",
+        "schema_version", "software", "version", "hardware", "os",
         "test_time", "finished_at", "run_status", "test_result",
         "upstream_supported", "unsupported_reasons", "test_cases",
         "job_url", "extensions",
@@ -113,15 +115,15 @@ def check_result(path: Path, data: dict) -> None:
     check_keys(data, allowed, where)
 
     for key in (
-        "schema_version", "software", "version", "hardware",
+        "schema_version", "software", "version", "hardware", "os",
         "test_time", "test_result",
         "upstream_supported", "unsupported_reasons", "test_cases",
     ):
         if key not in data:
             err(f"{where}: missing required field {key}")
 
-    if data.get("schema_version") != "2.0":
-        err(f"{where}.schema_version: expected '2.0'")
+    if data.get("schema_version") != "3.0":
+        err(f"{where}.schema_version: expected '3.0'")
 
     software = data.get("software")
     if not isinstance(software, str) or not SOFTWARE_RE.match(software):
@@ -134,6 +136,10 @@ def check_result(path: Path, data: dict) -> None:
     hardware = data.get("hardware")
     if hardware not in HARDWARE:
         err(f"{where}.hardware: invalid value {hardware!r}")
+
+    os_name = data.get("os")
+    if not isinstance(os_name, str) or not OS_RE.match(os_name):
+        err(f"{where}.os: invalid value {os_name!r}")
 
     run_start = parse_dt(data.get("test_time"), f"{where}.test_time")
     run_end = None
@@ -150,18 +156,18 @@ def check_result(path: Path, data: dict) -> None:
     if "test_result" in data and not isinstance(test_result, bool):
         err(f"{where}.test_result: must be boolean")
 
-    # 目录与文件名：<A-Z>/<应用名>/<应用版本>/<OS 简写>/<hardware>-<时间>.json
+    # 目录与文件名：<A-Z>/<应用名>/<应用版本>/<hardware>-<时间>.json
     try:
         parts = path.relative_to(RESULTS).parts
     except ValueError:
         parts = ()
-    if len(parts) != 5:
+    if len(parts) != 4:
         err(
             f"{where}: expected "
-            f"<A-Z>/<software>/<version>/<os-dir>/<file>.json"
+            f"<A-Z>/<software>/<version>/<file>.json"
         )
     else:
-        shard, dir_software, dir_version, _dir_os_version, filename = parts
+        shard, dir_software, dir_version, filename = parts
         expected_shard = (
             shard_for(software) if isinstance(software, str) and software else ""
         )

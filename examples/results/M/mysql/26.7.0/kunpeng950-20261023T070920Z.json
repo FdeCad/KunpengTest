@@ -1,0 +1,37 @@
+{
+  "schema_version": "3.0",
+  "software": "mysql",
+  "version": "26.7.0",
+  "hardware": "kunpeng950",
+  "os": "oe2403sp4",
+  "test_time": "2026-10-23T07:09:20Z",
+  "finished_at": "2026-10-23T07:31:13Z",
+  "run_status": "completed",
+  "test_result": true,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/nv-action/vllm-benchmarks/actions/runs/39906178119/job/120289431333",
+  "test_cases": [
+    {
+      "name": "version",
+      "description": "被测 mysqld 版本必须等于请求版本",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-23T07:09:20Z"
+    },
+    {
+      "name": "upstream-test",
+      "description": "使用上游 mysqlslap 客户端施加并发 SQL 负载",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-23T07:09:20Z"
+    },
+    {
+      "name": "sql-roundtrip",
+      "description": "mysqld 初始化 + 建库建表,INSERT/SELECT 回环校验",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-23T07:09:20Z"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": "3.0",
+  "software": "bolt",
+  "version": "2d01261",
+  "hardware": "kunpeng920",
+  "os": "ub2604",
+  "test_time": "2026-10-22T07:12:13Z",
+  "finished_at": "2026-10-22T07:45:20Z",
+  "run_status": "completed",
+  "test_result": false,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/FdeCad/boostkit-performance-evaluation/actions/runs/39738849015/job/119690973898",
+  "test_cases": []
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": "3.0",
+  "software": "hnswlib",
+  "version": "0.8.0",
+  "hardware": "kunpeng950",
+  "os": "ub2604",
+  "test_time": "2026-10-23T01:51:09Z",
+  "finished_at": "2026-10-23T02:16:08Z",
+  "run_status": "aborted",
+  "test_result": false,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/nv-action/vllm-benchmarks/actions/runs/39882723383/job/120183874733",
+  "test_cases": []
+}

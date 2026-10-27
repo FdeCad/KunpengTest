@@ -12,24 +12,23 @@ openeuler-docker-images-test/
 └── <A-Z>/                           # 应用名首字母大写，例如 F、M、P、X
     └── <应用名>/                    # 例如 faiss、mysql、pytorch、x264
         └── <应用版本>/              # 例如 1.8.0、26.7.0、28_19
-            └── <OS 简写>/              # 例如 oe2403sp4、ub2604
-                └── <hardware>-<YYYYMMDDTHHMMSSZ>.json
+            └── <hardware>-<YYYYMMDDTHHMMSSZ>.json
 ```
 
 示例：
 
 ```text
-F/faiss/1.8.0/oe2403sp4/kunpeng920-20261022T130819Z.json    #os写进json里面
-M/mysql/26.7.0/oe2403sp4/kunpeng950-20261023T070920Z.json
-X/x264/0480cb05/oe2403sp4/kunpeng950-20261023T080301Z.json
-O/openjdk/28_19/oe2403sp4/kunpeng920-20261022T155634Z.json
+F/faiss/1.8.0/kunpeng920-20261022T130819Z.json    # os 信息在 JSON 里
+M/mysql/26.7.0/kunpeng950-20261023T070920Z.json
+X/x264/0480cb05/kunpeng950-20261023T080301Z.json
+O/openjdk/28_19/kunpeng920-20261022T155634Z.json
 ```
 
 约定：
 
 - 首字母分片目录 = 应用名首字母大写（非字母开头归入 `0-9`），便于按前缀查找软件。
-- OS 目录使用简写：openEuler 为 `oe<yy.mm>sp<n>`（如 `oe2403sp4` 表示 24.03 LTS SP4），Ubuntu 为 `ub<yy.mm>`（如 `ub2604` 表示 26.04.x）；具体 OS 版本以目录为准。
-- 目录已经表达 `应用名 / 应用版本 / OS 版本`；JSON 里保留 `software`、`version` 字段，方便单文件自解释和校验。
+- OS 信息记录在 JSON 的 `os` 字段，不占用目录层级；取简写，如 `oe2403sp4`（openEuler 24.03 LTS SP4）、`ub2604`（Ubuntu 26.04.x）。
+- 目录已经表达 `应用名 / 应用版本`；JSON 里保留 `software`、`version` 字段，方便单文件自解释和校验。
 - 一个文件 = 一次测试运行；**不覆盖历史**。重测写新文件即可。
 - 文件名 = `<hardware>-<UTC 时间>.json`；同一秒内多次运行时追加 `-<6位run_id>`。
 - 没有 `index.json`，也没有读写接口；看板或脚本直接遍历目录读取。
@@ -40,9 +39,10 @@ O/openjdk/28_19/oe2403sp4/kunpeng920-20261022T155634Z.json
 
 | 字段 | 必填 | 说明 |
 | --- | --- | --- |
-| `schema_version` | 是 | 固定 `"2.0"` |
+| `schema_version` | 是 | 固定 `"3.0"` |
 | `software` / `version` | 是 | 应用名 / 应用版本，需与目录一致 |
 | `hardware` | 是 | `kunpeng920` / `kunpeng950`，需与文件名一致 |
+| `os` | 是 | 被测 OS 简写，如 `oe2403sp4`、`ub2604` |
 | `test_time` | 是 | 运行开始时间（UTC），需与文件名里的时间一致 |
 | `finished_at` | 否 | 运行结束时间（UTC） |
 | `run_status` | 否 | `completed`（默认）/ `aborted` / `error` |
@@ -57,8 +57,8 @@ O/openjdk/28_19/oe2403sp4/kunpeng920-20261022T155634Z.json
 
 ## 新增一次测试结果
 
-1. 按应用名首字母进入 `<A-Z>/<应用名>/<应用版本>/<OS 简写>/`。
-2. 新建 `<hardware>-<YYYYMMDDTHHMMSSZ>.json`，按 schema 填写。
+1. 按应用名首字母进入 `<A-Z>/<应用名>/<应用版本>/`。
+2. 新建 `<hardware>-<YYYYMMDDTHHMMSSZ>.json`，按 schema 填写（含 `os` 字段）。
 3. 运行校验：
 
 ```powershell
@@ -66,7 +66,7 @@ cd D:\kunpeng-test-result-api
 python .\scripts\validate_examples.py
 ```
 
-脚本会检查：必填字段与枚举、目录名与字段是否一致、文件名与 `hardware/test_time` 是否一致、`test_result` 与运行状态/用例结果是否矛盾、`upstream_supported` 与 `unsupported_reasons` 一致性。
+脚本会检查：必填字段与枚举、`os` 格式、目录名与字段是否一致、文件名与 `hardware/test_time` 是否一致、`test_result` 与运行状态/用例结果是否矛盾、`upstream_supported` 与 `unsupported_reasons` 一致性。
 
 ## 示例场景
 
@@ -77,10 +77,10 @@ python .\scripts\validate_examples.py
 
 | 场景 | 示例文件 |
 | --- | --- |
-| 同一版本双硬件 | [kunpeng920-20261022T130819Z.json](examples/results/F/faiss/1.8.0/oe2403sp4/kunpeng920-20261022T130819Z.json)、[kunpeng950-20261022T170731Z.json](examples/results/F/faiss/1.8.0/oe2403sp4/kunpeng950-20261022T170731Z.json) |
-| 同一软件多版本 | [flink 1.16.3](examples/results/F/flink/1.16.3/oe2403sp4/kunpeng920-20261022T135634Z.json)、[flink 2.3.0](examples/results/F/flink/2.3.0/oe2403sp4/kunpeng950-20261023T062746Z.json) |
-| 以 commit 作为版本号 | [x264 0480cb05](examples/results/X/x264/0480cb05/oe2403sp4/kunpeng950-20261023T080301Z.json) |
-| 版本号含下划线 | [openjdk 28_19](examples/results/O/openjdk/28_19/oe2403sp4/kunpeng920-20261022T155634Z.json) |
-| Ubuntu 通过 | [faiss 1.8.0 / kunpeng950](examples/results/F/faiss/1.8.0/ub2604/kunpeng950-20261022T171021Z.json) |
-| Ubuntu 失败（未产出逐条用例结论） | [envoy 1.40.0 / kunpeng920](examples/results/E/envoy/1.40.0/ub2604/kunpeng920-20261021T150831Z.json) |
-| Ubuntu 未完成（无最终结论） | [hnswlib 0.8.0 / kunpeng950](examples/results/H/hnswlib/0.8.0/ub2604/kunpeng950-20261023T015109Z.json) |
+| 同一版本双硬件 | [kunpeng920-20261022T130819Z.json](examples/results/F/faiss/1.8.0/kunpeng920-20261022T130819Z.json)、[kunpeng950-20261022T170731Z.json](examples/results/F/faiss/1.8.0/kunpeng950-20261022T170731Z.json) |
+| 同一软件多版本 | [flink 1.16.3](examples/results/F/flink/1.16.3/kunpeng920-20261022T135634Z.json)、[flink 2.3.0](examples/results/F/flink/2.3.0/kunpeng950-20261023T062746Z.json) |
+| 以 commit 作为版本号 | [x264 0480cb05](examples/results/X/x264/0480cb05/kunpeng950-20261023T080301Z.json) |
+| 版本号含下划线 | [openjdk 28_19](examples/results/O/openjdk/28_19/kunpeng920-20261022T155634Z.json) |
+| Ubuntu 通过 | [faiss 1.8.0 / kunpeng950](examples/results/F/faiss/1.8.0/kunpeng950-20261022T171021Z.json) |
+| Ubuntu 失败（未产出逐条用例结论） | [envoy 1.40.0 / kunpeng920](examples/results/E/envoy/1.40.0/kunpeng920-20261021T150831Z.json) |
+| Ubuntu 未完成（无最终结论） | [hnswlib 0.8.0 / kunpeng950](examples/results/H/hnswlib/0.8.0/kunpeng950-20261023T015109Z.json) |

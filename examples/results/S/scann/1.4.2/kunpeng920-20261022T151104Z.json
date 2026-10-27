@@ -1,0 +1,37 @@
+{
+  "schema_version": "3.0",
+  "software": "scann",
+  "version": "1.4.2",
+  "hardware": "kunpeng920",
+  "os": "oe2403sp4",
+  "test_time": "2026-10-22T15:11:04Z",
+  "finished_at": "2026-10-22T15:11:46Z",
+  "run_status": "completed",
+  "test_result": true,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/FdeCad/boostkit-performance-evaluation/actions/runs/39784091800/job/120191776395",
+  "test_cases": [
+    {
+      "name": "version",
+      "description": "已安装 scann 版本必须等于请求版本",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T15:11:04Z"
+    },
+    {
+      "name": "scann-dot-product",
+      "description": "dot_product 距离建索引并检索,校验返回形状与邻居合法性",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T15:11:04Z"
+    },
+    {
+      "name": "scann-squared-l2",
+      "description": "squared_l2 距离建索引并检索,校验返回形状一致、邻居合法与距离升序",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T15:11:04Z"
+    }
+  ]
+}

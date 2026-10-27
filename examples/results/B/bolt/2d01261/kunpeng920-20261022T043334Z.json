@@ -1,0 +1,37 @@
+{
+  "schema_version": "3.0",
+  "software": "bolt",
+  "version": "2d01261",
+  "hardware": "kunpeng920",
+  "os": "oe2403sp4",
+  "test_time": "2026-10-22T04:33:34Z",
+  "finished_at": "2026-10-22T04:46:07Z",
+  "run_status": "completed",
+  "test_result": true,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/FdeCad/boostkit-performance-evaluation/actions/runs/39723027653/job/119640638442",
+  "test_cases": [
+    {
+      "name": "version",
+      "description": "校验源码 commit / 镜像内 BUILD_VERSION 等于请求版本(短 sha 与完整 sha 互为前缀即可匹配)",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T04:33:34Z"
+    },
+    {
+      "name": "upstream-unit-test",
+      "description": "运行上游自带 gtest 单测子集(ctest -R 过滤);build 模式经上游 release_with_test 目标编译测试后真实执行(0 测试视为构建异常),prebuilt 镜像无测试树时记 skipped",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T04:33:34Z"
+    },
+    {
+      "name": "link-smoke",
+      "description": "最小可用性冒烟,校验构建产物 libbolt*.so 可被动态链接器加载",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T04:33:34Z"
+    }
+  ]
+}
