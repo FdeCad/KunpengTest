@@ -69,8 +69,13 @@ Jenkins: kunpeng-triage（新增）
 Jenkins: kunpeng-result-publish（新增）
    ├─ copyArtifacts 取回 result.json + triage.json
    ├─ schema 校验 + 路径一致性
-   ├─ disableConcurrentBuilds：规范化 + 校验 + git push（重试）
+   ├─ disableConcurrentBuilds：规范化 + 校验 + git push
    └─ GitCode 评论（advisory，含归因）
+
+
+***PR合入后触发新的kunpeng-result-publish，新增字段：PR_merged:True/False***
+
+
 
 Jenkins cron: kunpeng-backlog-seeder（每 15 分钟，保持待跑队列 ≤ 2N）
 Jenkins cron: kunpeng-daily-reconcile（每天，对账 / 覆盖率 / promote）
