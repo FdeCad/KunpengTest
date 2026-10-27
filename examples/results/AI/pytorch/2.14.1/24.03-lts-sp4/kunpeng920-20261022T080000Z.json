@@ -6,7 +6,8 @@
   "test_time": "2026-10-22T08:00:00Z",
   "finished_at": "2026-10-22T08:47:30Z",
   "run_status": "completed",
-  "upstream_unsupported": true,
+  "upstream_supported": false,  #只看邮件
+  "test_result": true,   #看板展示OS和硬件
   "unsupported_reasons": [
     {
       "code": "NO_UPSTREAM_AARCH64_WHEEL",
