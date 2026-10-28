@@ -3,14 +3,14 @@
 
 结果文件按应用名首字母 A-Z 分片存放：
 
-    <A-Z>/<应用名>/<应用版本>/<hardware>-<YYYYMMDDTHHMMSSZ>.json
+    <A-Z>/<应用名>/<应用版本>/<hardware>-<os>-<YYYYMMDDTHHMMSSZ>.json
 
 检查项：
   * 每个结果文件是合法 JSON，且符合文档中的字段契约
   * 首字母分片目录 / 应用名 / 应用版本与文件字段一致
-  * 文件名中的 hardware / test_time 与字段一致
+  * 文件名中的 hardware / os / test_time 与字段一致
   * os 为合法简写
-  * test_result 为布尔值，并与运行状态、用例结果保持一致
+  * display / CI_passed / PR_merged 为布尔值，CI_passed 与运行状态、用例结果一致
   * upstream_supported 与 unsupported_reasons 一致
   * schema 文件可解析
 
@@ -108,7 +108,8 @@ def check_result(path: Path, data: dict) -> None:
 
     allowed = {
         "schema_version", "software", "version", "hardware", "os",
-        "test_time", "finished_at", "run_status", "test_result",
+        "test_time", "finished_at", "run_status",
+        "display", "CI_passed", "PR_merged",
         "upstream_supported", "unsupported_reasons", "test_cases",
         "job_url", "extensions",
     }
@@ -116,14 +117,14 @@ def check_result(path: Path, data: dict) -> None:
 
     for key in (
         "schema_version", "software", "version", "hardware", "os",
-        "test_time", "test_result",
+        "test_time", "display", "CI_passed", "PR_merged",
         "upstream_supported", "unsupported_reasons", "test_cases",
     ):
         if key not in data:
             err(f"{where}: missing required field {key}")
 
-    if data.get("schema_version") != "3.0":
-        err(f"{where}.schema_version: expected '3.0'")
+    if data.get("schema_version") != "4.0":
+        err(f"{where}.schema_version: expected '4.0'")
 
     software = data.get("software")
     if not isinstance(software, str) or not SOFTWARE_RE.match(software):
@@ -152,11 +153,12 @@ def check_result(path: Path, data: dict) -> None:
     if run_status not in RUN_STATUS:
         err(f"{where}.run_status: invalid value {run_status!r}")
 
-    test_result = data.get("test_result")
-    if "test_result" in data and not isinstance(test_result, bool):
-        err(f"{where}.test_result: must be boolean")
+    for flag in ("display", "CI_passed", "PR_merged"):
+        if flag in data and not isinstance(data[flag], bool):
+            err(f"{where}.{flag}: must be boolean")
+    ci_passed = data.get("CI_passed")
 
-    # 目录与文件名：<A-Z>/<应用名>/<应用版本>/<hardware>-<时间>.json
+    # 目录与文件名：<A-Z>/<应用名>/<应用版本>/<hardware>-<os>-<时间>.json
     try:
         parts = path.relative_to(RESULTS).parts
     except ValueError:
@@ -181,7 +183,7 @@ def check_result(path: Path, data: dict) -> None:
         if dir_version != version:
             err(f"{where}: directory version {dir_version!r} != field {version!r}")
         if run_start:
-            expected = f"{hardware}-{compact_time(run_start)}"
+            expected = f"{hardware}-{os_name}-{compact_time(run_start)}"
             stem = filename[:-5] if filename.endswith(".json") else filename
             pattern = re.compile(
                 "^" + re.escape(expected) + r"(-[A-Za-z0-9]{6})?$"
@@ -289,14 +291,14 @@ def check_result(path: Path, data: dict) -> None:
                     elif not value or not all(is_number(v) for v in value.values()):
                         err(f"{cw}.thresholds.{key}: min/max must be numbers")
 
-    if run_status == "completed" and not cases and test_result is not False:
+    if run_status == "completed" and not cases and ci_passed is not False:
         warn(f"{where}: completed run has no test_cases")
 
-    if test_result is True:
+    if ci_passed is True:
         if run_status != "completed":
-            warn(f"{where}: test_result=true but run_status={run_status!r}")
+            warn(f"{where}: CI_passed=true but run_status={run_status!r}")
         if not cases:
-            warn(f"{where}: test_result=true but test_cases is empty")
+            warn(f"{where}: CI_passed=true but test_cases is empty")
         bad_cases = [
             str(case.get("name"))
             for case in cases
@@ -304,7 +306,7 @@ def check_result(path: Path, data: dict) -> None:
         ]
         if bad_cases:
             warn(
-                f"{where}: test_result=true but has fail/error cases: "
+                f"{where}: CI_passed=true but has fail/error cases: "
                 f"{', '.join(bad_cases)}"
             )
 

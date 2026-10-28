@@ -1,0 +1,39 @@
+{
+  "schema_version": "4.0",
+  "software": "brpc",
+  "version": "1.18.0",
+  "hardware": "kunpeng950",
+  "os": "oe2403sp4",
+  "test_time": "2026-10-23T09:09:38Z",
+  "finished_at": "2026-10-23T09:14:01Z",
+  "run_status": "completed",
+  "display": true,
+  "CI_passed": true,
+  "PR_merged": false,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/FdeCad/boostkit-performance-evaluation/actions/runs/39929802722/job/120335046305",
+  "test_cases": [
+    {
+      "name": "version",
+      "description": "源码 RELEASE_VERSION/镜像内版本必须等于请求版本",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-23T09:09:38Z"
+    },
+    {
+      "name": "upstream-test",
+      "description": "编译并运行上游 example/echo_c++ 的 server/client 完成一次 RPC 回环",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-23T09:09:38Z"
+    },
+    {
+      "name": "cpp-smoke",
+      "description": "编译链接 libbrpc 的最小程序,验证头文件与静态库可用",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-23T09:09:38Z"
+    }
+  ]
+}

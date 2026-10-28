@@ -1,0 +1,39 @@
+{
+  "schema_version": "4.0",
+  "software": "golang",
+  "version": "1.27.1",
+  "hardware": "kunpeng920",
+  "os": "oe2403sp4",
+  "test_time": "2026-10-22T16:37:40Z",
+  "finished_at": "2026-10-22T16:38:35Z",
+  "run_status": "completed",
+  "display": true,
+  "CI_passed": true,
+  "PR_merged": false,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/FdeCad/boostkit-performance-evaluation/actions/runs/39784091800/job/120191782286",
+  "test_cases": [
+    {
+      "name": "version",
+      "description": "安装的 Go 版本必须等于请求版本(ls `go version`,层1/2/3 任一来源均须匹配)",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T16:37:40Z"
+    },
+    {
+      "name": "upstream-test",
+      "description": "运行 GOROOT 自带 strings 标准库测试",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T16:37:40Z"
+    },
+    {
+      "name": "smoke",
+      "description": "go build 一个小模块并运行,校验 hello 输出",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T16:37:40Z"
+    }
+  ]
+}

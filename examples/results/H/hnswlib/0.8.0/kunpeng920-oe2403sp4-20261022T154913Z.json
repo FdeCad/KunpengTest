@@ -1,0 +1,39 @@
+{
+  "schema_version": "4.0",
+  "software": "hnswlib",
+  "version": "0.8.0",
+  "hardware": "kunpeng920",
+  "os": "oe2403sp4",
+  "test_time": "2026-10-22T15:49:13Z",
+  "finished_at": "2026-10-22T15:49:50Z",
+  "run_status": "completed",
+  "display": true,
+  "CI_passed": true,
+  "PR_merged": false,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/FdeCad/boostkit-performance-evaluation/actions/runs/39784091800/job/120191775755",
+  "test_cases": [
+    {
+      "name": "version",
+      "description": "安装的 hnswlib 头文件必须是请求版本(整套头文件的聚合 SHA-256 指纹比对)",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T15:49:13Z"
+    },
+    {
+      "name": "hnsw-knn-roundtrip",
+      "description": "g++ 编译并运行 HNSW addPoint/searchKnn 回环,校验自查询全命中与插值查询标签",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T15:49:13Z"
+    },
+    {
+      "name": "hnsw-save-reload",
+      "description": "索引 saveIndex 落盘后重新加载,校验加载后的检索结果一致",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T15:49:13Z"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": "4.0",
+  "software": "gcc",
+  "version": "16.2.0",
+  "hardware": "kunpeng920",
+  "os": "ub2604",
+  "test_time": "2026-10-22T15:57:22Z",
+  "finished_at": "2026-10-22T15:59:07Z",
+  "run_status": "completed",
+  "display": true,
+  "CI_passed": true,
+  "PR_merged": false,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/FdeCad/boostkit-performance-evaluation/actions/runs/39784091800/job/120191781863",
+  "test_cases": [
+    {
+      "name": "version",
+      "description": "获取到的 gcc 版本必须等于请求版本(层1/2/2b/3 任一来源均须匹配)",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T15:57:22Z"
+    },
+    {
+      "name": "upstream-test",
+      "description": "编译并运行一个 C 程序(gcc 功能验证)",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T15:57:22Z"
+    },
+    {
+      "name": "smoke",
+      "description": "编译并运行一个 C++ 程序(g++ 功能验证)",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T15:57:22Z"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": "4.0",
+  "software": "zstd",
+  "version": "1.5.7",
+  "hardware": "kunpeng920",
+  "os": "ub2604",
+  "test_time": "2026-10-16T11:48:14Z",
+  "finished_at": "2026-10-16T11:49:53Z",
+  "run_status": "completed",
+  "display": true,
+  "CI_passed": true,
+  "PR_merged": false,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/FdeCad/boostkit-performance-evaluation/actions/runs/38887050842/job/116927296126",
+  "test_cases": [
+    {
+      "name": "version",
+      "description": "被测 zstd 版本必须等于请求版本",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-16T11:48:14Z"
+    },
+    {
+      "name": "upstream-test",
+      "description": "运行上游 zstd tests/playTests.sh 短测套件",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-16T11:48:14Z"
+    },
+    {
+      "name": "cli-roundtrip",
+      "description": "zstd CLI 压缩/解压回环并按 sha256 校验内容一致",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-16T11:48:14Z"
+    }
+  ]
+}

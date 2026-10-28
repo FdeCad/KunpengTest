@@ -1,0 +1,39 @@
+{
+  "schema_version": "4.0",
+  "software": "lz4",
+  "version": "1.10.0",
+  "hardware": "kunpeng920",
+  "os": "ub2604",
+  "test_time": "2026-10-22T13:28:31Z",
+  "finished_at": "2026-10-22T13:30:23Z",
+  "run_status": "completed",
+  "display": true,
+  "CI_passed": true,
+  "PR_merged": false,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/FdeCad/boostkit-performance-evaluation/actions/runs/39784091800/job/120191779311",
+  "test_cases": [
+    {
+      "name": "version",
+      "description": "被测 lz4 版本必须等于请求版本",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T13:28:31Z"
+    },
+    {
+      "name": "upstream-test",
+      "description": "运行上游 lz4 tests/Makefile 的核心回归子集",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T13:28:31Z"
+    },
+    {
+      "name": "cli-roundtrip",
+      "description": "lz4 CLI 压缩/解压回环并按 sha256 校验内容一致",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T13:28:31Z"
+    }
+  ]
+}

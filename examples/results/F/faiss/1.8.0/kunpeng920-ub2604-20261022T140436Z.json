@@ -1,0 +1,39 @@
+{
+  "schema_version": "4.0",
+  "software": "faiss",
+  "version": "1.8.0",
+  "hardware": "kunpeng920",
+  "os": "ub2604",
+  "test_time": "2026-10-22T14:04:36Z",
+  "finished_at": "2026-10-22T14:05:32Z",
+  "run_status": "completed",
+  "display": true,
+  "CI_passed": true,
+  "PR_merged": false,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/FdeCad/boostkit-performance-evaluation/actions/runs/39784091800/job/120191775553",
+  "test_cases": [
+    {
+      "name": "version",
+      "description": "已安装 faiss 版本必须等于请求版本",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T14:04:36Z"
+    },
+    {
+      "name": "index-flat-l2",
+      "description": "构建 IndexFlatL2,add 向量,search 返回最近邻并校验与暴力计算一致",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T14:04:36Z"
+    },
+    {
+      "name": "index-ivf-pq",
+      "description": "训练 IndexIVFPQ 量化索引,add 向量并检索,校验训练/入库状态与邻居合法性",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T14:04:36Z"
+    }
+  ]
+}

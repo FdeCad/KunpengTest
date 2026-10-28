@@ -1,0 +1,17 @@
+{
+  "schema_version": "4.0",
+  "software": "redis",
+  "version": "6.0.20",
+  "hardware": "kunpeng950",
+  "os": "ub2604",
+  "test_time": "2026-10-22T11:10:00Z",
+  "finished_at": "2026-10-22T11:16:23Z",
+  "run_status": "aborted",
+  "display": false,
+  "CI_passed": false,
+  "PR_merged": false,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/nv-action/vllm-benchmarks/actions/runs/39768421730/job/119789854128",
+  "test_cases": []
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": "4.0",
+  "software": "openviking",
+  "version": "0.5.0",
+  "hardware": "kunpeng950",
+  "os": "oe2403sp4",
+  "test_time": "2026-10-23T05:38:51Z",
+  "finished_at": "2026-10-23T05:40:25Z",
+  "run_status": "completed",
+  "display": true,
+  "CI_passed": true,
+  "PR_merged": false,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/nv-action/vllm-benchmarks/actions/runs/39906178119/job/120289758057",
+  "test_cases": [
+    {
+      "name": "version",
+      "description": "已安装 openviking 版本必须等于请求版本",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-23T05:38:51Z"
+    },
+    {
+      "name": "agfs-readwrite",
+      "description": "AGFS 挂载 memfs 后写入并回读固定负载,校验逐字节一致",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-23T05:38:51Z"
+    },
+    {
+      "name": "agfs-operations",
+      "description": "AGFS stat/ls/mkdir/grep/rm 操作序列功能验证",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-23T05:38:51Z"
+    }
+  ]
+}

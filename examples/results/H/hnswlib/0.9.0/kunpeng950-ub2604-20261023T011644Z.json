@@ -1,0 +1,39 @@
+{
+  "schema_version": "4.0",
+  "software": "hnswlib",
+  "version": "0.9.0",
+  "hardware": "kunpeng950",
+  "os": "ub2604",
+  "test_time": "2026-10-23T01:16:44Z",
+  "finished_at": "2026-10-23T01:23:19Z",
+  "run_status": "completed",
+  "display": true,
+  "CI_passed": true,
+  "PR_merged": false,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/nv-action/vllm-benchmarks/actions/runs/39882723383/job/120183874514",
+  "test_cases": [
+    {
+      "name": "version",
+      "description": "安装的 hnswlib 头文件必须是请求版本(整套头文件的聚合 SHA-256 指纹比对)",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-23T01:16:44Z"
+    },
+    {
+      "name": "hnsw-knn-roundtrip",
+      "description": "g++ 编译并运行 HNSW addPoint/searchKnn 回环,校验自查询全命中与插值查询标签",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-23T01:16:44Z"
+    },
+    {
+      "name": "hnsw-save-reload",
+      "description": "索引 saveIndex 落盘后重新加载,校验加载后的检索结果一致",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-23T01:16:44Z"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": "4.0",
+  "software": "folly",
+  "version": "2026.10.12.00",
+  "hardware": "kunpeng920",
+  "os": "ub2604",
+  "test_time": "2026-10-22T15:27:09Z",
+  "finished_at": "2026-10-22T15:32:44Z",
+  "run_status": "completed",
+  "display": true,
+  "CI_passed": true,
+  "PR_merged": false,
+  "upstream_supported": true,
+  "unsupported_reasons": [],
+  "job_url": "https://github.com/FdeCad/boostkit-performance-evaluation/actions/runs/39784091800/job/120191778946",
+  "test_cases": [
+    {
+      "name": "version",
+      "description": "检出源码的 tag 必须等于请求版本(v<version>)",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T15:27:09Z"
+    },
+    {
+      "name": "upstream-test",
+      "description": "编译并运行使用 folly 公共 API 的程序",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T15:27:09Z"
+    },
+    {
+      "name": "link-smoke",
+      "description": "最小头文件包含 + 链接 libfolly 的可用性验证",
+      "category": "functional",
+      "result": "pass",
+      "test_time": "2026-10-22T15:27:09Z"
+    }
+  ]
+}
