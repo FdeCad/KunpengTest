@@ -7,7 +7,9 @@
   "test_time": "2026-10-22T04:33:34Z",
   "finished_at": "2026-10-22T04:46:07Z",
   "run_status": "completed",
-  "test_result": true,
+  "CI_passed": true,
+  "PR_merged": true,       //if PR_merged == True && CI_passed == True: show()
+  "display": true,
   "upstream_supported": true,
   "unsupported_reasons": [],
   "job_url": "https://github.com/FdeCad/boostkit-performance-evaluation/actions/runs/39723027653/job/119640638442",
