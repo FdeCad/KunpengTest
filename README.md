@@ -89,3 +89,10 @@ python .\scripts\validate_examples.py
 | Ubuntu 通过 | [faiss 1.8.0 / kunpeng950](examples/results/F/faiss/1.8.0/kunpeng950-ub2604-20261022T171021Z.json) |
 | Ubuntu 失败（未产出逐条用例结论） | [envoy 1.40.0 / kunpeng920](examples/results/E/envoy/1.40.0/kunpeng920-ub2604-20261021T150831Z.json) |
 | Ubuntu 未完成（无最终结论） | [hnswlib 0.8.0 / kunpeng950](examples/results/H/hnswlib/0.8.0/kunpeng950-ub2604-20261023T015109Z.json) |
+
+## 相关文档
+
+- [鲲鹏功能测试设计草案（v0.5）](docs/design-kunpeng-functional-test-v0.5.md)
+- [上游问题分析与处理机制](docs/upstream-issue-handling.md)
+- [EulerPublisher PR 校验流水线图](docs/EulerPublisher%20PR%20Validation%20Pipeline-2026-10-28-093825.svg)
+
