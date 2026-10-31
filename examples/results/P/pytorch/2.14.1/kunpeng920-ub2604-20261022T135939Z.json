@@ -1,5 +1,5 @@
 {
-  "schema_version": "4.0",
+  "schema_version": "0.5",
   "software": "pytorch",
   "version": "2.14.1",
   "hardware": "kunpeng920",

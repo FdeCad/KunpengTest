@@ -1,5 +1,5 @@
 {
-  "schema_version": "4.0",
+  "schema_version": "0.5",
   "software": "golang",
   "version": "1.27.1",
   "hardware": "kunpeng920",

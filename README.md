@@ -29,9 +29,10 @@ O/openjdk/28_19/kunpeng920-oe2403sp4-20261022T155634Z.json
 - 首字母分片目录 = 应用名首字母大写（非字母开头归入 `0-9`），便于按前缀查找软件。
 - OS 信息记录在 JSON 的 `os` 字段，并体现在文件名中；不占用目录层级。取简写，如 `oe2403sp4`（openEuler 24.03 LTS SP4）、`ub2604`（Ubuntu 26.04.x）。
 - 目录已经表达 `应用名 / 应用版本`；JSON 里保留 `software`、`version` 字段，方便单文件自解释和校验。
-- 一个文件 = 一次测试运行；**不覆盖历史**。重测写新文件即可。
+- 一个文件 = 一次测试运行。同一 PR 合入后重跑时会**覆盖**该 PR 原有的合入报告；不同运行按时间戳各自保留，不覆盖其他历史。
 - 文件名 = `<hardware>-<OS 简写>-<UTC 时间>.json`，例如 `kunpeng920-oe2403sp4-20261022T130819Z.json`；同一秒内多次运行时追加 `-<6位run_id>`。
 - 没有 `index.json`，也没有读写接口；看板或脚本直接遍历目录读取。
+- CI 的 check 阶段会把待合入的测试索引写到 `_pending/<prid>/<应用名>/<应用版本>/<os>.json`（不是结果数据，看板忽略）；PR 合入后 push 阶段读取该索引生成正式报告并删除索引。
 
 ## 字段速查
 
@@ -39,13 +40,13 @@ O/openjdk/28_19/kunpeng920-oe2403sp4-20261022T155634Z.json
 
 | 字段 | 必填 | 说明 |
 | --- | --- | --- |
-| `schema_version` | 是 | 固定 `"4.0"` |
+| `schema_version` | 是 | 固定 `"0.5"` |
 | `software` / `version` | 是 | 应用名 / 应用版本，需与目录一致 |
 | `hardware` | 是 | `kunpeng920` / `kunpeng950`，需与文件名一致 |
 | `os` | 是 | 被测 OS 简写，如 `oe2403sp4`、`ub2604` |
 | `test_time` | 是 | 运行开始时间（UTC），需与文件名里的时间一致 |
 | `finished_at` | 否 | 运行结束时间（UTC） |
-| `run_status` | 否 | `completed`（默认）/ `aborted` / `error` |
+| `run_status` | 否 | `completed`（默认）/ `aborted` / `error` / `force_merged` |
 | `display` | 是 | 看板展示开关：仅当 `CI_passed` 与 `PR_merged` 都为 `true` 时才为 `true` |
 | `CI_passed` | 是 | CI 测试是否通过：`true` 表示可在该硬件 + OS 上正常运行 |
 | `PR_merged` | 是 | 对应 PR 是否已合入 |
@@ -56,6 +57,8 @@ O/openjdk/28_19/kunpeng920-oe2403sp4-20261022T155634Z.json
 用例结果 `result` 取值：`pass` / `fail` / `skip` / `blocked` / `error`。
 
 `display` 是看板唯一的展示开关：只有 `display=true` 的结果文件才会出现在看板上，且仅当 `CI_passed` 与 `PR_merged` 都为 `true` 时，`display` 才为 `true`。`CI_passed` 表示 CI 结论，为 `true` 时不要求所有用例都 `pass`（`skip` / `blocked` 可接受）；但运行中止（`aborted` / `error`）或存在 `fail` / `error` 用例时不应置为 `true`，校验脚本会对这类组合给出警告。`PR_merged` 记录对应 PR 的合入状态。
+
+`run_status=force_merged` 表示 PR 在 CI 未通过（或测试结果缺失）的情况下仍被合入，此时 `CI_passed=false`、`display=false`，硬件标识可能退化为 `unknown`，用于留痕和人工复核。
 
 ## 新增一次测试结果
 

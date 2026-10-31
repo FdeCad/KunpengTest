@@ -1,5 +1,5 @@
 {
-  "schema_version": "4.0",
+  "schema_version": "0.5",
   "software": "openviking",
   "version": "0.5.0",
   "hardware": "kunpeng920",

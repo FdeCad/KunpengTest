@@ -32,7 +32,7 @@ SCHEMA = ROOT / "schema" / "test-result.schema.json"
 HARDWARE = {"kunpeng920", "kunpeng950"}
 CATEGORY = {"functional", "performance"}
 RESULT = {"pass", "fail", "skip", "blocked", "error"}
-RUN_STATUS = {"completed", "aborted", "error"}
+RUN_STATUS = {"completed", "aborted", "error", "force_merged"}
 SOFTWARE_RE = re.compile(r"^[a-z0-9][a-z0-9._+-]{0,63}$")
 VERSION_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._+~_-]{0,63}$")
 OS_RE = re.compile(r"^[a-z0-9][a-z0-9._-]{1,31}$")
@@ -123,8 +123,8 @@ def check_result(path: Path, data: dict) -> None:
         if key not in data:
             err(f"{where}: missing required field {key}")
 
-    if data.get("schema_version") != "4.0":
-        err(f"{where}.schema_version: expected '4.0'")
+    if data.get("schema_version") != "0.5":
+        err(f"{where}.schema_version: expected '0.5'")
 
     software = data.get("software")
     if not isinstance(software, str) or not SOFTWARE_RE.match(software):

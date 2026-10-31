@@ -1,5 +1,5 @@
 {
-  "schema_version": "4.0",
+  "schema_version": "0.5",
   "software": "ceph",
   "version": "16.2.8",
   "hardware": "kunpeng950",

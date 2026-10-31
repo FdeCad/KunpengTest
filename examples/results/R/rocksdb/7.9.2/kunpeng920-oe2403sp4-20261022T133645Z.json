@@ -1,5 +1,5 @@
 {
-  "schema_version": "4.0",
+  "schema_version": "0.5",
   "software": "rocksdb",
   "version": "7.9.2",
   "hardware": "kunpeng920",

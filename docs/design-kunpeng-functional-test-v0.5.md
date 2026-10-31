@@ -141,16 +141,16 @@ docker run --rm "${IMAGE}" redis-cli --version
 
 ### 5.1 result.json
 
-字段全部为顶层字段，不使用 `extensions` 嵌套。因字段变更，KunpengTest schema 需从 3.0 升到 4.0：
+字段全部为顶层字段，不使用 `extensions` 嵌套。当前 KunpengTest schema 版本为 0.5（与 eulerpublisher 实现保持一致）：
 
 | 字段 | 类型 | 来源 |
 |---|---|---|
-| `schema_version` | string | 固定 `"4.0"` |
+| `schema_version` | string | 固定 `"0.5"` |
 | `software` / `version` | string | `APP` / `VERSION` |
 | `hardware` | string | 节点指纹（`kunpeng920` / `kunpeng950`） |
 | `os` | string | 构建 job 的 `OS` 简写 |
 | `test_time` / `finished_at` | string | test stage 起止时间（UTC） |
-| `run_status` | string | `completed` / `error` |
+| `run_status` | string | `completed` / `aborted` / `error` / `force_merged` |
 | `CI_passed` | bool | 门禁结论：脚本退出码与用例结果 |
 | `PR_merged` | bool | 本次运行是否来自合入后重跑 |
 | `image_digest` / `image_tag` | string | `DIGEST` / tag |
@@ -167,7 +167,7 @@ PR 通过的最小示例：
 
 ```json
 {
-  "schema_version": "4.0",
+  "schema_version": "0.5",
   "software": "redis",
   "version": "8.0.6",
   "hardware": "kunpeng920",
@@ -204,8 +204,8 @@ PR 通过的最小示例：
 <root>/<A-Z>/<app>/<version>/<hardware>-<YYYYMMDDTHHMMSSZ>.json
 ```
 
-- 一个文件 = 一次运行，不覆盖历史；
-- 去重键：`image_digest + hardware + test_script_sha + PR_merged`，命中则不重复提交；
+- 一个文件 = 一次运行；同一 PR 合入后重跑会覆盖该 PR 原有的合入报告，其他运行按时间戳各自保留；
+- 去重键：`image_digest + hardware + test_script_sha + PR_merged`，命中则覆盖原报告而不新增文件；
 - 推送 job 串行执行（`disableConcurrentBuilds`），冲突时 rebase 重试 3 次；
 - **推送失败不影响门禁结论**，只告警并保留 artifact，避免结果仓故障阻塞所有 PR。
 
@@ -286,7 +286,7 @@ test stage 之后、推送之前执行，规则与旧草案一致（`rules/triag
 5. 无论通过或失败，结果都出现在 `KunpengTest-pr` 分支对应版本目录。
 6. 合入后自动重跑一次，结果写入 `KunpengTest` canonical 目录。
 7. 同一 `digest + hardware + test_script_sha + PR_merged` 不产生重复结果文件。
-8. 结果 JSON 通过 KunpengTest schema 4.0 校验（新增 `CI_passed` / `PR_merged`，删除 `extensions`）。
+8. 结果 JSON 通过 KunpengTest schema 0.5 校验（新增 `CI_passed` / `PR_merged`，删除 `extensions`）。
 
 ---
 
@@ -299,5 +299,5 @@ test stage 之后、推送之前执行，规则与旧草案一致（`rules/triag
 5. `upstream_supported` 的权威声明放在哪里（`meta.yml` 还是仓库根独立文件）？
 6. 测试脚本文件名是否固定为 `test.sh`，还是允许按软件名（如 `redis-test.sh`）？
 7. `KunpengTest-pr` 分支的创建需要 `upstream-dashboard` 仓库 owner 同意。
-8. KunpengTest schema 需要从 3.0 升到 4.0（删 `extensions`、新增 `CI_passed` / `PR_merged`），看板与校验脚本需要同步改，由谁维护？
+8. KunpengTest schema 升级到 0.5（删 `extensions`、新增 `CI_passed` / `PR_merged`），看板与校验脚本需要同步改，由谁维护？
 9. `CI_passed` 与 `run_status` 的组合语义是否要固化到 schema 校验规则（例如 `run_status=error` 时必须 `CI_passed=false`）？

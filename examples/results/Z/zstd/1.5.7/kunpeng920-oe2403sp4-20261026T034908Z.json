@@ -1,5 +1,5 @@
 {
-  "schema_version": "4.0",
+  "schema_version": "0.5",
   "software": "zstd",
   "version": "1.5.7",
   "hardware": "kunpeng920",

@@ -1,5 +1,5 @@
 {
-  "schema_version": "4.0",
+  "schema_version": "0.5",
   "software": "flink",
   "version": "2.3.0",
   "hardware": "kunpeng950",
