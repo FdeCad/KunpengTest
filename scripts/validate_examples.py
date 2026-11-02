@@ -109,7 +109,7 @@ def check_result(path: Path, data: dict) -> None:
     allowed = {
         "schema_version", "software", "version", "hardware", "os",
         "test_time", "finished_at", "run_status",
-        "display", "CI_passed", "PR_merged",
+        "display", "CI_passed", "PR_merged", "prid",
         "upstream_supported", "unsupported_reasons", "test_cases",
         "job_url", "extensions",
     }

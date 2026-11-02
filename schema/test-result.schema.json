@@ -59,7 +59,7 @@
       "type": "string",
       "enum": ["completed", "aborted", "error", "force_merged"],
       "default": "completed",
-      "description": "运行级状态。单条用例结果见 test_cases[].result。未执行到用例阶段时允许 test_cases 为空。force_merged=CI 未通过或测试结果缺失但仍被合入。"
+      "description": "运行级状态。单条用例结果见 test_cases[].result。未执行到用例阶段时允许 test_cases 为空。force_merged 为历史数据，新流程不再产生。"
     },
     "display": {
       "type": "boolean",
@@ -72,6 +72,10 @@
     "PR_merged": {
       "type": "boolean",
       "description": "对应 PR 是否已合入。true=已合入；false=未合入或尚无 PR。"
+    },
+    "prid": {
+      "type": "string",
+      "description": "产生该报告的 PR 编号，由 CI 写入；手工补充的示例可以省略。"
     },
     "upstream_supported": {
       "type": "boolean",
