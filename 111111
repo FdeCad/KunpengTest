@@ -1,0 +1,11 @@
+Spark, Flink, Bolt, Hive, Hadoop, Kafka, Doris, ClickHouse, StarRocks, Daft,
+HBase, Lance, Gluten, Celeborn, Ray, Mooncake, Ceph, FUSE, CubeFS, MinIO,
+MySQL (Percona), Redis, OceanBase, RocksDB, OpenViking, Milvus, PostgreSQL,
+MongoDB, etcd, TiDB, SQLite, InfluxDB, MariaDB, KVM, Envoy, Kubernetes, QEMU,
+libvirt, containerd, Docker, Prometheus, Calico, CoreDNS, Flannel, Harbor,
+OpenStack, E2B, Kata Containers, Faiss, newpfordelta, RabbitMQ, DiskANN,
+TensorRT-LLM, hnswlib, ScaNN, TensorFlow, PyTorch, vLLM, OpenClaw, llama.cpp,
+SGLang, NumPy, x264, x265, FFmpeg, Android, OpenCV, libavif, libwebp, glibc,
+ISA-L, Snappy, LZ4, Zstd, DPDK, SPDK, fbthrift, Eigen, RapidJSON, simdjson,
+Hyperscan, Protobuf, gRPC, Folly, sonic-cpp, brpc, CloudWeGo, Nginx, Tomcat,
+Netty, grpc-java, Spring, jemalloc, GCC, Python, Go, OpenJDK, Clang, XLA, Rust
